@@ -10,7 +10,7 @@ export default function SearchBox({ query, handleChange }: SearchBoxProps) {
       type="text"
       placeholder="Search notes"
       defaultValue={query}
-      onChange={handleChange}
+      onChange={() => handleChange}
     />
   );
 }

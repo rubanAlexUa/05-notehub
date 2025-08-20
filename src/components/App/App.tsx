@@ -45,8 +45,10 @@ export default function App() {
   const totalPages = data?.totalPages ?? 0;
 
   const handleChange = useDebouncedCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) =>
-      setQuery(event.target.value),
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setQuery(event.target.value);
+      setPage(1);
+    },
     1000
   );
 
