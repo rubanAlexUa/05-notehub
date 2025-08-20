@@ -1,7 +1,6 @@
 import c from "./App.module.css";
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { FormikHelpers } from "formik";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
 
 import NoteForm from "../NoteForm/NoteForm";
@@ -10,8 +9,7 @@ import Modal from "../Modal/Modal";
 import Pagination from "../Pagination/Pagination";
 import SearchBox from "../SearchBox/SearchBox";
 
-import { fetchNotes, createNote } from "../../services/noteService";
-import type { NoteFormValues } from "../../types/note";
+import { fetchNotes } from "../../services/noteService";
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -21,29 +19,12 @@ export default function App() {
   const { data } = useQuery({
     queryKey: ["note", query, page],
     queryFn: () => fetchNotes({ query, page }),
-  });
-
-  const queryClient = useQueryClient();
-
-  const createTodo = useMutation({
-    mutationFn: createNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["note"] });
-      console.log("New ToDo added");
-    },
+    placeholderData: keepPreviousData,
   });
 
   function onClose() {
     setIsModalOpened(false);
   }
-  const handleSumbit = (
-    values: NoteFormValues,
-    actions: FormikHelpers<NoteFormValues>
-  ) => {
-    console.log(values);
-    createTodo.mutate(values);
-    actions.resetForm();
-  };
 
   const totalPages = data?.totalPages ?? 0;
 
@@ -70,10 +51,10 @@ export default function App() {
           Create note +
         </button>
       </header>
-      {data && <NoteList notes={data}></NoteList>}
+      {data && <NoteList notes={data.notes}></NoteList>}
       {isModalOpened && (
         <Modal onClose={onClose}>
-          <NoteForm onClose={onClose} onSumbit={handleSumbit}></NoteForm>
+          <NoteForm onClose={onClose}></NoteForm>
         </Modal>
       )}
     </div>

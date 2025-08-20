@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { NoteFormValues } from "../types/note";
+import type { Note, NoteFormValues, NoteListResponce } from "../types/note";
 axios.defaults.baseURL = "https://notehub-public.goit.study/api";
 
 const token = import.meta.env.VITE_NOTEHUB_TOKEN;
@@ -10,7 +10,7 @@ interface NoteServiceProps {
 }
 
 export const fetchNotes = async ({ query, page }: NoteServiceProps) => {
-  const res = await axios.get("/notes", {
+  const res = await axios.get<NoteListResponce>("/notes", {
     params: {
       search: query,
       page,
@@ -23,18 +23,20 @@ export const fetchNotes = async ({ query, page }: NoteServiceProps) => {
   return res.data;
 };
 
-export const createNote = async (newTodo: NoteFormValues) => {
-  return axios.post("/notes", newTodo, {
+export const createNote = async (newTodo: NoteFormValues): Promise<Note> => {
+  const res = await axios.post<Note>("/notes", newTodo, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  return res.data;
 };
 
-export const deleteNote = async (noteId: string) => {
-  return axios.delete(`/notes/${noteId}`, {
+export const deleteNote = async (noteId: string): Promise<Note> => {
+  const res = await axios.delete<Note>(`/notes/${noteId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  return res.data;
 };

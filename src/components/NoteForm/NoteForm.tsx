@@ -3,16 +3,14 @@ import { Field, Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import type { FormikHelpers } from "formik";
 import type { NoteFormValues } from "../../types/note";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createNote } from "../../services/noteService";
 
 interface NoteFormProps {
   onClose: () => void;
-  onSumbit: (
-    values: NoteFormValues,
-    actions: FormikHelpers<NoteFormValues>
-  ) => void;
 }
 
-export default function NoteForm({ onClose, onSumbit }: NoteFormProps) {
+export default function NoteForm({ onClose }: NoteFormProps) {
   const initialValues: NoteFormValues = {
     title: "",
     content: "",
@@ -33,13 +31,32 @@ export default function NoteForm({ onClose, onSumbit }: NoteFormProps) {
       "Shopping",
     ]),
   });
+
+  const queryClient = useQueryClient();
+
+  const createTodo = useMutation({
+    mutationFn: createNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["note"] });
+      console.log("New ToDo added");
+    },
+  });
+
+  const handleSubmit = (
+    values: NoteFormValues,
+    actions: FormikHelpers<NoteFormValues>
+  ) => {
+    console.log(values);
+    createTodo.mutate(values);
+    actions.resetForm();
+  };
   return (
     <div className={c.backdrop} role="dialog" aria-modal="true">
       <div className={c.modal}>
         <Formik
           initialValues={initialValues}
           validationSchema={OrderFormSchema}
-          onSubmit={onSumbit}
+          onSubmit={handleSubmit}
         >
           <Form className={c.form}>
             <div className={c.formGroup}>

@@ -1,15 +1,7 @@
 import css from "./NoteList.module.css";
-import type { Note } from "../../types/note";
 import { deleteNote } from "../../services/noteService";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { nanoid } from "nanoid";
-
-interface NoteListProps {
-  notes: {
-    notes: Note[];
-    totalPages: number;
-  };
-}
+import type { NoteListProps } from "../../types/note";
 
 export default function NoteList({ notes }: NoteListProps) {
   const queryClient = useQueryClient();
@@ -27,8 +19,8 @@ export default function NoteList({ notes }: NoteListProps) {
   };
   return (
     <ul className={css.list}>
-      {notes.notes.map((noteInfo) => (
-        <li className={css.listItem} key={nanoid()} id={nanoid()}>
+      {notes.map((noteInfo) => (
+        <li className={css.listItem} key={noteInfo.id} id={noteInfo.id}>
           <h2 className={css.title}>{noteInfo.title}</h2>
           <p className={css.content}>{noteInfo.content}</p>
           <div className={css.footer}>
