@@ -2,20 +2,21 @@ import c from "./NoteForm.module.css";
 import { Field, Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import type { FormikHelpers } from "formik";
-import { nanoid } from "nanoid";
-
-import type { Note } from "../../types/note";
+import type { NoteFormValues } from "../../types/note";
 
 interface NoteFormProps {
   onClose: () => void;
-  onSumbit: (values: Note, actions: FormikHelpers<Note>) => void;
+  onSumbit: (
+    values: NoteFormValues,
+    actions: FormikHelpers<NoteFormValues>
+  ) => void;
 }
+
 export default function NoteForm({ onClose, onSumbit }: NoteFormProps) {
-  const initialValues: Note = {
-    id: nanoid(),
+  const initialValues: NoteFormValues = {
     title: "",
     content: "",
-    tag: "",
+    tag: "Todo",
   };
 
   const OrderFormSchema = Yup.object().shape({

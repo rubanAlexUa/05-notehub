@@ -11,7 +11,7 @@ import Pagination from "../Pagination/Pagination";
 import SearchBox from "../SearchBox/SearchBox";
 
 import { fetchNotes, createNote } from "../../services/noteService";
-import type { Note } from "../../types/note";
+import type { NoteFormValues } from "../../types/note";
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -36,7 +36,10 @@ export default function App() {
   function onClose() {
     setIsModalOpened(false);
   }
-  const handleSumbit = (values: Note, actions: FormikHelpers<Note>) => {
+  const handleSumbit = (
+    values: NoteFormValues,
+    actions: FormikHelpers<NoteFormValues>
+  ) => {
     console.log(values);
     createTodo.mutate(values);
     actions.resetForm();
