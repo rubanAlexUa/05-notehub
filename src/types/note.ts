@@ -12,12 +12,3 @@ export interface NoteFormValues {
   content: string;
   tag: "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
 }
-
-export interface NoteListResponce {
-  notes: Note[];
-  totalPages: number;
-}
-
-export interface NoteListProps {
-  notes: Note[];
-}

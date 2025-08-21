@@ -39,6 +39,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["note"] });
       console.log("New ToDo added");
+      onClose();
     },
   });
 
